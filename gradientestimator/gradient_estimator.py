@@ -13,6 +13,7 @@ class GradientMonteCarloEstimator(nn.Module):
         """
         super(GradientMonteCarloEstimator, self).__init__()
         self.distribution = distribution
+        self.combined_grad_f_s = False
 
 
     def __call__(self, f, param_distribution, n_mc = 1,):

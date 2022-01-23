@@ -10,6 +10,7 @@ class PathWise(GradientMonteCarloEstimator):
 
     def __init__(self, distribution, ):
         super(PathWise, self).__init__(distribution,)
+        self.combined_grad_f_s = True
 
     def __call__(self, f, param_distribution, n_mc = 1,):
         """

@@ -12,8 +12,8 @@ class FixedBernoulli(DistributionModule):
         super(FixedBernoulli, self).__init__(distribution = torch.distributions.Bernoulli, **kwargs)
         self.value = value
     
-    def forward(self, distribution_parameters, ):
-        self.current_distribution = self.distribution(probs = torch.full_like(distribution_parameters, self.value))
+    def forward(self, probs, ):
+        self.current_distribution = self.distribution(probs = torch.full_like(probs, self.value))
         return self.current_distribution
         
     def sample_function(self, sample_shape):

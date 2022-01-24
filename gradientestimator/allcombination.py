@@ -15,6 +15,7 @@ class AllCombination(GradientMonteCarloEstimator):
         super(AllCombination, self).__init__(distribution,)
         self.all_z = None
         self.nbdim = None
+        self.fix_n_mc = True
 
     def __call__(self, f, param_distribution, n_mc = 1,):
         """
@@ -25,6 +26,7 @@ class AllCombination(GradientMonteCarloEstimator):
 
         Note: Here n_mc is actually not useful, because we are not doing any Monte Carlo sampling but just using all combination from the data
         """
+
         p_z = self.distribution(probs = param_distribution)
         # Param distribution must be in the shape Batch_size x dim
         if self.all_z is None :
@@ -34,7 +36,7 @@ class AllCombination(GradientMonteCarloEstimator):
         
         z = self.all_z.reshape(torch.Size((self.n_mc,)) + param_distribution.shape[1:])
         z = z.unsqueeze(1).expand(torch.Size((self.n_mc,)) + param_distribution.shape)
-        log_prob = torch.sum(p_z.log_prob(z),axis=-1)
+        log_prob = torch.sum(p_z.log_prob(z).flatten(2),axis=-1)
         output = f(z)
         
         loss_z = torch.sum(output * torch.exp(log_prob), axis=0)

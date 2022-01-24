@@ -22,7 +22,7 @@ class REBAR(GradientMonteCarloEstimator):
         
         p_z, p_z_relaxed = self.distribution(probs = param_distribution)
         [sig_z, s, sig_z_tilde] = self.distribution.sample((n_mc,))
-        log_prob = torch.sum(p_z.log_prob(s), axis=-1)
+        log_prob = torch.sum(p_z.log_prob(s).flatten(2), axis=-1)
         
         p_f_s = f(s.detach(), )
         p_f_sig_z = f(sig_z, )

@@ -25,7 +25,7 @@ class REINFORCE(GradientMonteCarloEstimator):
         """
         p_z = self.distribution(probs = param_distribution)
         z = p_z.sample((n_mc,))
-        log_prob = torch.sum(p_z.log_prob(z), axis=-1)
+        log_prob = torch.sum(p_z.log_prob(z).flatten(2), axis=-1)
 
         output = f(z,)
         loss_f = torch.mean(output.clone(), axis=0)

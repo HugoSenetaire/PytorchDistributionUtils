@@ -31,7 +31,7 @@ class AllCombination(GradientMonteCarloEstimator):
         # Param distribution must be in the shape Batch_size x dim
         if self.all_z is None :
             self.nbdim = int(np.prod(param_distribution.shape[1:]))
-            self.all_z = torch.tensor(get_all_z(self.nbdim), dtype=torch.float32)
+            self.all_z = torch.tensor(get_all_z(self.nbdim), dtype=torch.float32, device=param_distribution.device)
             self.n_mc = self.all_z.shape[0] # 2 ** nbdim
         
         z = self.all_z.reshape(torch.Size((self.n_mc,)) + param_distribution.shape[1:])

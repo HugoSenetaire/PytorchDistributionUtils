@@ -19,7 +19,7 @@ class ThresholdSTE(Transform):
         return isinstance(other, ThresholdSTE)
 
     def _call(self, x):
-        return threshold_STE(x, rate = self.rate)
+        return threshold_STE.apply(x, rate = self.rate)
 
     def _inverse(self, y):
         return y # TODO : Is it better to have None ?

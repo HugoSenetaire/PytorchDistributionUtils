@@ -16,6 +16,7 @@ class AllCombination(GradientMonteCarloEstimator):
         self.all_z = None
         self.nbdim = None
         self.fix_n_mc = True
+        self.combined_grad_f_s = True
 
     def __call__(self, f, param_distribution, n_mc = 1,):
         """

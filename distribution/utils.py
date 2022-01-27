@@ -71,7 +71,7 @@ class argmax_STE(torch.autograd.Function):
 
 class threshold_STE(torch.autograd.Function):
     @staticmethod
-    def forward(ctx, input, ratio):
+    def forward(ctx, input, ratio = 0.5):
         # ctx.save_for_backward(input, k)
         device = input.device
         if not torch.is_tensor(ratio):

@@ -9,7 +9,7 @@ import torch
 
 class FixedBernoulli(DistributionModule):
     def __init__(self, value = 0.5, **kwargs):
-        super(FixedBernoulli, self).__init__(distribution = torch.distributions.Bernoulli, **kwargs)
+        super(FixedBernoulli, self).__init__(distribution = torch.distributions.Bernoulli,)
         self.value = value
     
     def forward(self, probs, ):

@@ -12,8 +12,6 @@ def safe_log_prob(x, eps=1e-8):
 def sigma_lambda(z, lambda_value):
   return torch.sigmoid(z / lambda_value)
 
-# def binary_log_likelihood(y, log_y_hat):
-    # return (y * -F.softplus(-log_y_hat)) + (1 - y) * (-log_y_hat - F.softplus(-log_y_hat))
 
 def Heaviside(x):
     return torch.heaviside(x.detach(), torch.tensor(0., device = x.device))

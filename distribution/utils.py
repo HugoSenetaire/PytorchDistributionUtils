@@ -33,15 +33,19 @@ def continuous_topk(scores, k, temperature, separate=False):
 class topK_STE(torch.autograd.Function):
     @staticmethod
     def forward(ctx, input, k):
+        """
+        Apply top-k sampling to the input.
+        Args:
+            input (Tensor): the input tensor of shape (batch_size, num_features), its in the shape of khot I think
+            k (int): the number of samples to return
+        Returns:
+            Tensor: the top-k samples   
+        """
         # ctx.save_for_backward(input, k)
-        print("TOPK STE is not realy working because of the dimension. Be careful when using it.")
         _, subset_size_indices = input.topk(k, dim=-1, largest=True, sorted=False)
-        if input.is_cuda:
-            subset_size_indices = subset_size_indices.cuda()
-            output = torch.zeros_like(input, dtype=input.dtype).scatter_(-1, subset_size_indices, torch.ones_like(input))
-        else :
-            output = torch.zeros(input.shape, dtype=input.dtype).scatter_(-1, subset_size_indices, 1.0)
-        
+
+        output = torch.zeros_like(input).scatter_(-1, subset_size_indices, torch.ones_like(input))
+
         return output
 
     @staticmethod

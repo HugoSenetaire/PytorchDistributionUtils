@@ -22,10 +22,17 @@ class RelaxedBernoulli_thresholded_STE(torch.distributions.RelaxedBernoulli):
     def __init__(self, temperature = 1, probs =None, logits = None, threshold = 0.5, validate_args = None) -> None:
         super(RelaxedBernoulli_thresholded_STE, self).__init__(temperature, probs, logits, validate_args)
         self.threshold = threshold
+    
+    def sample(self, n_sample):
+        samples = super(RelaxedBernoulli_thresholded_STE, self).sample(n_sample)
+        samples = threshold_STE.apply(samples, self.threshold)
+
+        return samples
 
     def rsample(self, n_sample):
         samples = super(RelaxedBernoulli_thresholded_STE, self).rsample(n_sample)
         samples = threshold_STE.apply(samples, self.threshold)
+
         return samples
 
 

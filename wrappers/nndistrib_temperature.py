@@ -7,7 +7,7 @@ from .scheduler_parameter import regular_scheduler
 
 
 class DistributionWithTemperatureParameter(DistributionModule):
-    def __init__(self, distribution, temperature_train = 0.5, scheduler_parameter = regular_scheduler, test_temperature = 0.0, **kwargs):
+    def __init__(self, distribution, temperature_train = 0.5, scheduler_parameter = regular_scheduler, test_temperature = 1e-5, **kwargs):
         super(DistributionWithTemperatureParameter, self).__init__(distribution,)
         self.current_distribution = None
         self.temperature = torch.tensor(temperature_train, dtype=torch.float32)
@@ -25,9 +25,10 @@ class DistributionWithTemperatureParameter(DistributionModule):
 
     def sample_function(self, sample_shape):
         if self.training :
-            return self.current_distribution.rsample(sample_shape)
+            sample = self.current_distribution.rsample(sample_shape)
         else :
-            return self.current_distribution.sample(sample_shape)
+            sample = self.current_distribution.sample(sample_shape)
+        return sample
 
     def update_distribution(self, epoch = None):
         if self.scheduler_parameter is not None :

@@ -10,9 +10,8 @@ class DistributionModule(nn.Module):
     This is a wrapper for the pytorch distribution. 
     Makes it easier to work with parameters such as temperature that needs to be learn or scheduled.
     """
-    def __init__(self, distribution, sampling_transform = None, **kwargs):
+    def __init__(self, distribution, **kwargs):
         super().__init__()
-        self.sampling_transform = sampling_transform
         self.distribution = distribution
         self.current_distribution = distribution
 
@@ -31,7 +30,6 @@ class DistributionModule(nn.Module):
 
     def sample(self, sample_shape= (1,)):
         sample = self.sample_function(sample_shape)
-        # return self.sampling_transform(sample) # TODO : How to handle some sampling transform ?
         return sample
 
     def update_distribution(self, epoch = None):

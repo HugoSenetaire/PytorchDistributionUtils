@@ -18,14 +18,14 @@ import numpy as np
 
 
 class L2XDistribution(torch.distributions.RelaxedOneHotCategorical):
-  def __init__(self, temperature=1, probs = None, logits = None, subset_size=None, validate_args=None):
+  def __init__(self, temperature=1, probs = None, logits = None, k=None, validate_args=None):
         super(L2XDistribution, self).__init__(temperature, probs, logits, validate_args)
-        self.subset_size = subset_size
+        self.k = k
 
 
   def rsample(self, n_samples):
         samples = super(L2XDistribution, self).rsample(n_samples).unsqueeze(0)
-        for k in range(self.subset_size-1):
+        for k in range(self.k-1):
             samples = torch.cat((samples, super(L2XDistribution, self).rsample(n_samples).unsqueeze(0)), 0)
         samples = torch.max(samples, dim=0)
         return samples      
@@ -36,9 +36,9 @@ class L2XDistribution(torch.distributions.RelaxedOneHotCategorical):
 
 
 class L2XDistribution_STE(torch.distributions.RelaxedOneHotCategorical):
-    def __init__(self, temperature=1, probs = None, logits = None, subset_size=None, validate_args=None):
+    def __init__(self, temperature=1, probs = None, logits = None, k=None, validate_args=None):
         super(L2XDistribution_STE, self).__init__(temperature, probs, logits, validate_args)
-        self.subset_size = subset_size
+        self.k = k
 
     def rsample(self, n_samples):
         samples = super().rsample(n_samples).unsqueeze(0)

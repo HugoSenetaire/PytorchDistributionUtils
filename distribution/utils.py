@@ -43,9 +43,8 @@ class topK_STE(torch.autograd.Function):
         """
         # ctx.save_for_backward(input, k)
         _, subset_size_indices = input.topk(k, dim=-1, largest=True, sorted=False)
-
-        output = torch.zeros_like(input).scatter_(-1, subset_size_indices, torch.ones_like(input))
-
+        output = torch.zeros_like(input)
+        output = output.scatter_(-1, subset_size_indices, torch.ones_like(input))
         return output
 
     @staticmethod

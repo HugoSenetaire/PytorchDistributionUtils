@@ -37,6 +37,7 @@ class ExpRelaxdeSubsetSampling(Distribution):
 
     def __init__(self, temperature, k, probs=None, logits=None, validate_args=None):
         self._khot_subset_sampling = KHotSubsetSampling(k = k, probs = probs, logits = logits, validate_args = validate_args)
+        self.k = k
         self._k = k
         self.temperature = temperature
         batch_shape = self._khot_subset_sampling.batch_shape
@@ -71,6 +72,8 @@ class ExpRelaxdeSubsetSampling(Distribution):
         shape = self._extended_shape(sample_shape)
         uniforms = clamp_probs(torch.rand(shape, dtype=self.logits.dtype, device=self.logits.device))
         gumbels = -((-(uniforms.log())).log())
+        # aux_logits = self.logits - torch.logsumexp(self.logits, dim=-1, keepdim=True) + torch.log(self._k) 
+        # scores = (aux_logits + gumbels)/self.temperature
         scores = (self.logits + gumbels)/self.temperature
         return scores - scores.logsumexp(dim=-1, keepdim=True) + torch.log(torch.tensor(self._k, dtype =torch.float32)) 
 
@@ -114,6 +117,7 @@ class RelaxedSubsetSampling(TransformedDistribution):
 
     def __init__(self, temperature, k, probs=None, logits=None, validate_args=None):
         base_dist = ExpRelaxdeSubsetSampling(temperature = temperature, k = k, probs = probs, logits = logits, validate_args=validate_args)
+        self.k = k
         self._k = k
         self._temperature = temperature
         super(RelaxedSubsetSampling, self).__init__(base_dist,
@@ -164,6 +168,7 @@ class RelaxedSubsetSampling_STE(TransformedDistribution):
 
     def __init__(self, temperature, k, probs=None, logits=None, validate_args=None):
         base_dist = ExpRelaxdeSubsetSampling(temperature, k, probs, logits, validate_args=validate_args)
+        self.k = k
         self._k = k
         super(RelaxedSubsetSampling_STE, self).__init__(base_dist,
                                                     topKSTE(k = self._k),

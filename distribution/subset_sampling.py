@@ -127,7 +127,9 @@ class SubsetSampling(Distribution):
         uniforms = clamp_probs(torch.rand(sample_shape, dtype=self.probs.dtype, device=self.probs.device))
         score = (uniforms.log() / clamp_probs(self.probs)).exp()
         sample_index = torch.topk(score, self._k, dim=-1)[1] #TODO Check that this give the correct result
-        return sample_index
+        output = torch.zeros_like(input)
+        output = output.scatter_(-1, sample_index, torch.ones_like(input))
+        return output
 
     def log_prob(self, value):
         """ Here this is just an approximation. """
